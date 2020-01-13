@@ -79,7 +79,14 @@ public:
 
 	virtual void pin_mode(byte pinNum, byte mode) { pinMode(pinNum, mode); }
 	virtual void pin_write(byte pinNum, boolean level) { digitalWrite(pinNum, level); }
-	virtual int  pin_read(byte pinNum) { return digitalRead(pinNum); }
+	virtual int  pin_read(byte pinNum) {
+		for (uint i = 0; i < numReads; i++) {
+			if (digitalRead(pinNum) == HIGH) {
+				return HIGH;
+			}
+		}
+		return LOW;
+	}
 
 	uint bitMap[MAPSIZE];	// 10 row x 16 column array of bits. Except Due which has 32 columns.
 	Key key[LIST_MAX];
@@ -92,6 +99,7 @@ public:
 	bool isPressed(char keyChar);
 	void setDebounceTime(uint);
 	void setHoldTime(uint);
+	void setNumReads(uint);
 	void addEventListener(void (*listener)(char));
 	int findInList(char keyChar);
 	int findInList(int keyCode);
@@ -107,6 +115,7 @@ private:
 	KeypadSize sizeKpd;
 	uint debounceTime;
 	uint holdTime;
+	uint numReads;
 	bool single_key;
 
 	void scanKeys();

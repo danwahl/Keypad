@@ -42,6 +42,7 @@ Keypad::Keypad(char *userKeymap, byte *row, byte *col, byte numRows, byte numCol
 
 	setDebounceTime(10);
 	setHoldTime(500);
+	setNumReads(3);
 	keypadEventListener = 0;
 
 	startTime = 0;
@@ -59,7 +60,7 @@ char Keypad::getKey() {
 
 	if (getKeys() && key[0].stateChanged && (key[0].kstate==PRESSED))
 		return key[0].kchar;
-	
+
 	single_key = false;
 
 	return NO_KEY;
@@ -238,6 +239,10 @@ void Keypad::setDebounceTime(uint debounce) {
 
 void Keypad::setHoldTime(uint hold) {
     holdTime = hold;
+}
+
+void Keypad::setNumReads(uint num_reads) {
+	num_reads<1 ? numReads=1 : numReads=num_reads;
 }
 
 void Keypad::addEventListener(void (*listener)(char)){
